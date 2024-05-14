@@ -9,7 +9,7 @@ const client = new MongoClient(MONGODB_URI, { useNewUrlParser: true, useUnifiedT
 const resetNumber = async () => {
   try {
     await client.connect();
-    const collection = client.db("test").collection("numbers");
+    const collection = client.db("data").collection("data");
     await collection.updateOne({ id: '1' }, { $set: { number: 0 } });
   } catch (err) {
     console.error(err);
@@ -19,7 +19,7 @@ const resetNumber = async () => {
 const initializeDataFile = async () => {
   try {
     await client.connect();
-    const collection = client.db("test").collection("numbers");
+    const collection = client.db("data").collection("data");
     const number = await collection.findOne({ id: '1' });
     if (!number) {
       await resetNumber();
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       await client.connect();
-      const collection = client.db("test").collection("numbers");
+      const collection = client.db("data").collection("data");
       const data = await collection.findOne({ id: '1' });
 
       if (data.number < MAX_NUMBER) {
