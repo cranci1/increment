@@ -22,7 +22,7 @@ const resetNumber = async () => {
 
 resetNumber();
 
-app.post('/', async (req, res) => {
+app.post('/increment', async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFile('data.json'));
 
