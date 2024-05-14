@@ -1,14 +1,16 @@
-// pages/api/more.js
-import fs from 'fs-extra';
-import path from 'path';
+// pages/api/increment.js
+import { MongoClient } from 'mongodb';
 
 const MAX_NUMBER = Number(process.env.MAX_NUMBER) || 20;
-const DATA_PATH = path.join(process.cwd(), 'data', 'data.json');
+const MONGODB_URI = process.env.MONGODB_URI;
+
+const client = new MongoClient(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const resetNumber = async () => {
   try {
-    const data = { number: 0 };
-    await fs.writeFile(DATA_PATH, JSON.stringify(data));
+    await client.connect();
+    const collection = client.db("test").collection("numbers");
+    await collection.updateOne({ id: '1' }, { $set: { number: 0 } });
   } catch (err) {
     console.error(err);
   }
@@ -16,13 +18,14 @@ const resetNumber = async () => {
 
 const initializeDataFile = async () => {
   try {
-    await fs.access(DATA_PATH);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
+    await client.connect();
+    const collection = client.db("test").collection("numbers");
+    const number = await collection.findOne({ id: '1' });
+    if (!number) {
       await resetNumber();
-    } else {
-      console.error(err);
     }
+  } catch (err) {
+    console.error(err);
   }
 };
 
@@ -31,11 +34,12 @@ export default async function handler(req, res) {
     await initializeDataFile();
 
     if (req.method === 'POST') {
-      const data = JSON.parse(await fs.readFile(DATA_PATH));
+      await client.connect();
+      const collection = client.db("test").collection("numbers");
+      const data = await collection.findOne({ id: '1' });
 
       if (data.number < MAX_NUMBER) {
-        data.number++;
-        await fs.writeFile(DATA_PATH, JSON.stringify(data));
+        await collection.updateOne({ id: '1' }, { $inc: { number: 1 } });
         res.json({ success: true });
 
         const now = new Date();
@@ -51,10 +55,6 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     console.error(err);
-    if (err.code === 'ENOENT') {
-      res.status(500).json({ error: 'Data file not found' });
-    } else {
-      res.status(500).json({ error: `Internal server error: ${err.message}` });
-    }
+    res.status(500).json({ error: `Internal server error: ${err.message}` });
   }
 }
