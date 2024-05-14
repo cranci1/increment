@@ -1,17 +1,15 @@
 {
   "name": "increment",
   "version": "1.0.0",
-  "description": "",
+  "description": "increment api!!!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "next build"
+    "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "crancu",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2",
-    "next": "^14.2.3"
+    "express": "^4.19.2"
   }
 }
