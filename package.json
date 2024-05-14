@@ -1,15 +1,18 @@
 {
   "name": "increment",
-  "version": "1.0.0",
-  "description": "increment api!!!",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "node index.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "keywords": [],
-  "author": "crancu",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "dotenv": "^16.4.5",
+    "fs-extra": "^11.2.0",
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18"
   }
 }
