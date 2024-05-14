@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs').promises;
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 const MAX_NUMBER = process.env.MAX_NUMBER || 20;
 
 app.use(express.json());
@@ -23,7 +22,7 @@ const resetNumber = async () => {
 
 resetNumber();
 
-app.post('/increment', async (req, res) => {
+app.post('/', async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFile('data.json'));
 
@@ -40,6 +39,4 @@ app.post('/increment', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app;
